@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ZemmParser } from "zemm-protocol";
 
 const formSchema = z.object({
   name: z.string(),
@@ -24,6 +25,7 @@ const formSchema = z.object({
 function Menu({ lat, lng }: { lat: number; lng: number }) {
   const [menuState, setMenu] = useState(0);
   const [imageBase64, setImageBase64] = useState<string | null>(null);
+  const zemmy = new ZemmParser();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,9 +50,11 @@ function Menu({ lat, lng }: { lat: number; lng: number }) {
       };
     }
   };
-
+  // sendSMSMessage(process.env.API_URL + '/send-sos', zemm)
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log({ ...values, lat, lng });
+    const data = { ...values, location: { lat, lng } };
+    zemmy.encode(data);
+
     setMenu(3);
   }
 
