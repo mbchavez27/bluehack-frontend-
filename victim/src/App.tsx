@@ -35,7 +35,7 @@ const App = () => {
   const [position, setPosition] = useState({ lat: 14.5995, lng: 120.9842 }); // Initial position (Manila)
   return (
     <>
-      <APIProvider apiKey={"AIzaSyChsSsrCtT6PL3MThymQ4lHBfavGlo7TrY"}>
+      <APIProvider apiKey={import.meta.env.VITE_API_KEY || ""}>
         <div className="bg-gray-950">
           <div className="flex justify-center items-center h-screen w-screen">
             <div className=" relative w-[25vw] h-[100vh]">

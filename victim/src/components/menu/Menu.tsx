@@ -13,7 +13,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+// @ts-ignore
 import { ZemmParser } from "zemm-protocol";
+// @ts-ignore
+import { sendSMSMessage } from "macky-sms";
 
 const formSchema = z.object({
   name: z.string(),
@@ -50,10 +53,11 @@ function Menu({ lat, lng }: { lat: number; lng: number }) {
       };
     }
   };
-  // sendSMSMessage(process.env.API_URL + '/send-sos', zemm)
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const data = { ...values, location: { lat, lng } };
-    zemmy.encode(data);
+    const data = { data: values, lat, lng };
+    console.log(data);
+    const zemm = zemmy.encode(data);
+    sendSMSMessage(import.meta.env.VITE_API_URL + "/send-sos", zemm);
 
     setMenu(3);
   }
@@ -84,7 +88,11 @@ function Menu({ lat, lng }: { lat: number; lng: number }) {
                     <FormItem className="flex-1">
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: John Mark..." {...field} />
+                        <Input
+                          placeholder="Ex: John Mark..."
+                          {...field}
+                          required
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
