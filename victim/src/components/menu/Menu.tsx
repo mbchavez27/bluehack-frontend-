@@ -54,11 +54,11 @@ function Menu({ lat, lng }: { lat: number; lng: number }) {
     }
   };
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const data = { data: { values, lat, lng } };
+    const data = { data: { number: "09275270464", ...values, lat, lng } };
     console.log(data);
     const zemm = zemmy.encode(data);
     sendSMSMessage(
-      "http://localhost:3000" + "/send-sos",
+      import.meta.env.VITE_API_URL + "/send-sos",
       // import.meta.env.VITE_API_URL
       zemm
     );
