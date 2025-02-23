@@ -34,7 +34,8 @@ const Menu = (props) => {
         </div>
         <div>
           <div
-            className={`bg-${color}-500 text-white flex justify-center px-12 py-2 rounded-lg hover:opacity-50 transition`}
+            className={`text-white flex justify-center px-12 py-2 rounded-lg hover:opacity-50 transition`}
+            style={{ backgroundColor: color === "green" ? "green" : "orange" }}
             onClick={handleAcceptClick}
           >
             {accept ? "Accepted" : "Accept"}
