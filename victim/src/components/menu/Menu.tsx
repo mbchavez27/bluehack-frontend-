@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -180,12 +181,12 @@ function Menu({ lat, lng }: { lat: number; lng: number }) {
     </div>
   );
 }
-import { useState, useEffect } from "react";
 
-function SOSMessage() {
+const SOSMessage = () => {
   const [text, setText] = useState(
     "Na-send na ang iyong SOS sa mga emergency respondents"
   );
+  const audioRef = useRef(new Audio("./audio.mp3")); // Using useRef to manage audio
 
   useEffect(() => {
     const firstTimeout = setTimeout(() => {
@@ -200,10 +201,29 @@ function SOSMessage() {
       return () => clearTimeout(secondTimeout);
     }, 2500); // Change text after 2.5 seconds
 
-    return () => clearTimeout(firstTimeout);
+    // Play the audio after 5 seconds and loop it for 5 seconds
+    const audio = audioRef.current;
+    const audioTimeout = setTimeout(() => {
+      audio.loop = true; // Loop the audio
+      audio.play().catch((err) => console.error("Audio play error: ", err));
+
+      // Stop the audio after 5 seconds (or 10 seconds depending on your choice)
+      setTimeout(() => {
+        audio.loop = false; // Stop looping
+        audio.pause();
+        audio.currentTime = 0; // Reset audio to the start
+      }, 10000); // Set to 10000 for 10 seconds
+    }, 1000); // Start playing after 5 seconds
+
+    // Cleanup timeouts and audio when component unmounts
+    return () => {
+      clearTimeout(firstTimeout);
+      clearTimeout(audioTimeout);
+      audio.pause(); // Stop the audio if the component is unmounted
+    };
   }, []);
 
   return <h1>{text}</h1>;
-}
+};
 
 export default Menu;
