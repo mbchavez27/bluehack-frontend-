@@ -2,7 +2,7 @@ const NavBar = () => {
   return (
     <>
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[25vw] flex justify-between items-center text-white bg-transparent z-10 px-6 py-4 my-12">
-        <h1 className="font-extrabold text-xl">Select location.</h1>
+        <h1 className="font-extrabold text-xl">Rescuer POV.</h1>
         <div className="flex space-x-4">
           <div>
             <svg

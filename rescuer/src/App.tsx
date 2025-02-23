@@ -1,10 +1,12 @@
 import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
 import NavBar from "./components/navbar/NavBar";
 import Menu from "./components/menu/Menu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+// @ts-ignore
+import { sendSMSMessage } from "macky-sms";
 
 const center = { lat: 14.5995, lng: 120.9842 }; // Example: Manila
-const position = { lat: 14.5995, lng: 120.9842 }; // Example: Manila
+const defaultPosition = { lat: 14.5995, lng: 120.9842 }; // Example: Manila
 
 const darkModeStyle = [
   { elementType: "geometry", stylers: [{ color: "#212121" }] },
@@ -32,10 +34,26 @@ const darkModeStyle = [
   },
 ];
 const App = () => {
-  const [position, setPosition] = useState({ lat: 14.5995, lng: 120.9842 }); // Initial position (Manila)
+  const [position, setPosition] = useState(defaultPosition); // Initial position (Manila)
+  const [sos, setSOS] = useState({});
+
+  useEffect(() => {
+    async function getList() {
+      try {
+        const list = await sendSMSMessage(
+          import.meta.env.VITE_API_URL + "/list-sos"
+        );
+        setSOS(list);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getList();
+  }, []);
+
   return (
     <>
-      <APIProvider apiKey={"AIzaSyChsSsrCtT6PL3MThymQ4lHBfavGlo7TrY"}>
+      <APIProvider apiKey={import.meta.env.VITE_API_KEY || ""}>
         <div className="bg-gray-950">
           <div className="flex justify-center items-center h-screen w-screen">
             <div className=" relative w-[25vw] h-[100vh]">
@@ -47,24 +65,16 @@ const App = () => {
                 defaultZoom={20}
               >
                 {" "}
-                <Marker
-                  position={position}
-                  draggable={true}
-                  onDragEnd={(event) => {
-                    const latLng = event.latLng;
-                    if (!latLng) return; // Prevents error if latLng is null
-
-                    const newPosition = {
-                      lat: latLng.lat(),
-                      lng: latLng.lng(),
-                    };
-
-                    setPosition(newPosition); // Save new position in state
-                    console.log(newPosition);
-                  }}
-                />
+                {sos.values &&
+                  sos.values.map((value: any, index: number) => (
+                    <Marker
+                      key={index}
+                      position={{ lat: value.lat, lng: value.lng }}
+                      draggable={false}
+                    />
+                  ))}
               </Map>
-              <Menu lat={position.lat} lng={position.lng}></Menu>
+              <Menu toRescue={sos.values} />
             </div>
           </div>
         </div>
