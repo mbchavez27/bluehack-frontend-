@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -34,7 +33,7 @@ function Menu({ lat, lng }: { lat: number; lng: number }) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      headCount: "",
+      headCount: "1",
       desc: "",
       image: "",
     },
@@ -109,7 +108,7 @@ function Menu({ lat, lng }: { lat: number; lng: number }) {
                     <FormItem className="flex-1">
                       <FormLabel>Head Count</FormLabel>
                       <FormControl>
-                        <Input placeholder="0" type="number" {...field} />
+                        <Input placeholder="1" type="number" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -181,6 +180,7 @@ function Menu({ lat, lng }: { lat: number; lng: number }) {
     </div>
   );
 }
+import { useState, useEffect } from "react";
 
 function SOSMessage() {
   const [text, setText] = useState(
@@ -188,13 +188,19 @@ function SOSMessage() {
   );
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
+    const firstTimeout = setTimeout(() => {
       setText(
         "Paparating na ang emergency respondent. Huwag mangamba sa tunog ng alarm. Gagamitin ito upang mas mapabilis ang paghanap saiyo"
       );
-    }, 5000);
 
-    return () => clearTimeout(timeout);
+      const secondTimeout = setTimeout(() => {
+        window.location.reload();
+      }, 5000); // Reload after 5 seconds
+
+      return () => clearTimeout(secondTimeout);
+    }, 2500); // Change text after 2.5 seconds
+
+    return () => clearTimeout(firstTimeout);
   }, []);
 
   return <h1>{text}</h1>;
