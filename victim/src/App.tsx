@@ -36,7 +36,7 @@ const App = () => {
   return (
     <>
       <APIProvider apiKey={import.meta.env.VITE_API_KEY || ""}>
-        <div className="bg-gray-950">
+        <div className="bg-[#ff5400] font-inter">
           <div className="flex justify-center items-center h-screen w-screen">
             <div className=" relative w-[25vw] h-[100vh]">
               <NavBar></NavBar>
